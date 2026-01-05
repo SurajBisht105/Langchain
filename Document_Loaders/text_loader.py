@@ -12,7 +12,7 @@ prompt = PromptTemplate(
     template='Write a summary for the following poem - \n {poem}',
     input_variables=['poem']
 )
-rser = StrOutputParser()
+parser = StrOutputParser()
 
 loader = TextLoader('./Document_Loaders/cricket.txt', encoding='utf-8')
 
