@@ -63,7 +63,7 @@ doc10 = Document(
 docs = [doc1, doc2, doc3, doc4, doc5, doc6, doc7, doc8, doc9, doc10]
 
 vector_store = Chroma(
-    embedding_function=GoogleGenerativeAIEmbeddings(model="models/embedding-001"),
+    embedding_function=GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-001"),
     persist_directory='chroma_db',
     collection_name='sample'
 )
@@ -88,6 +88,6 @@ vector_store.similarity_search_with_score(
 
 # meta-data filtering
 vector_store.similarity_search_with_score(
-    query='',
+    query='who among these are a bowler?',
     filter={'team': "CSK"}
 )
