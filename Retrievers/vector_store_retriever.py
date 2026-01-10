@@ -30,6 +30,7 @@ query = "What is Chroma used for ?"
 
 result = retriever.invoke(query)
 
+
 for i, doc in enumerate(result):
     print(f"\n--- Result {i+1} ---")
     print(doc.page_content)
