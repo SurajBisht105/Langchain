@@ -3,7 +3,6 @@
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_chroma import Chroma
 from langchain_core.documents import Document
-from langchain_core.documents import Document
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -61,6 +60,7 @@ doc10 = Document(
 
 # Putting them into a list for use in Chroma
 docs = [doc1, doc2, doc3, doc4, doc5, doc6, doc7, doc8, doc9, doc10]
+
 
 vector_store = Chroma(
     embedding_function=GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-001"),
