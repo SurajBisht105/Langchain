@@ -2,7 +2,7 @@
 
 import os
 
-os.environ["GOOGLE_API_KEY"] = "AIzaSyAXZ-ab-YpzEH60feQZtQpV58f9WeeVeJo"
+os.environ["GOOGLE_API_KEY"] = ""
 
 from youtube_transcript_api import YouTubeTranscriptApi, TranscriptsDisabled
 from langchain_text_splitters import RecursiveCharacterTextSplitter
