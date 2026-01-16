@@ -6,6 +6,8 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_google_genai import ChatGoogleGenerativeAI,GoogleGenerativeAIEmbeddings
 from langchain_core.prompts import PromptTemplate
 from langchain_community.vectorstores import FAISS
+from langchain_core.runnables import RunnableParallel,RunnableLambda,RunnablePassthrough
+from langchain_core.output_parsers import StrOutputParser
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -17,16 +19,16 @@ try:
     transcript_list = YouTubeTranscriptApi().fetch(video_id, languages=["en"])
 
     transcript = " ".join(chunk.text for chunk in transcript_list)
-    print(transcript)
+    # print(transcript)
 
 except TranscriptsDisabled:
     print("No captions available for this video.")
 
 
-# splitting
+
 splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
 chunks = splitter.create_documents([transcript])
-print(len(chunks))
+# print(len(chunks))
 
 
 
@@ -68,3 +70,22 @@ final_prompt = prompt.invoke({"context": context_text ,"question":question})
 
 answer= llm.invoke(final_prompt)
 print(answer)
+
+
+
+def format_docs(retriever_docs):
+    context_text = "\n\n".join(doc.page_content for doc in retrieved_docs)
+    return context_text
+
+parallel_chain = RunnableParallel({
+    "context": retriever | RunnableLambda(format_docs),
+    "question": RunnablePassthrough
+})
+
+parallel_chain.invoke("who is denis")
+
+parser = StrOutputParser()
+
+main_chain = parallel_chain | prompt | llm | parser
+
+main_chain.invoke("can you summarize the video")
