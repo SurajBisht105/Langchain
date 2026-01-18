@@ -4,6 +4,7 @@
 from youtube_transcript_api import YouTubeTranscriptApi, TranscriptsDisabled
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_google_genai import ChatGoogleGenerativeAI,GoogleGenerativeAIEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_core.prompts import PromptTemplate
 from langchain_community.vectorstores import FAISS
 from langchain_core.runnables import RunnableParallel,RunnableLambda,RunnablePassthrough
@@ -37,7 +38,7 @@ vectorstore = FAISS.from_documents(chunks, embeddings)
  
 
 
-retriever = vectorstore.as_retriever(search_type="similarity", search_kwarg={"k": 4})
+retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k": 4})
 retriever.invoke("What is deepmind")
 
 
@@ -53,7 +54,7 @@ prompt = PromptTemplate(
     {context}
     Question: {question}
 """,
-input_variables= {'context', 'question'}
+input_variables= ['context', 'question']
 )
 
 
@@ -74,12 +75,12 @@ print(answer)
 
 
 def format_docs(retriever_docs):
-    context_text = "\n\n".join(doc.page_content for doc in retrieved_docs)
+    context_text = "\n\n".join(doc.page_content for doc in retriever_docs)  
     return context_text
 
 parallel_chain = RunnableParallel({
     "context": retriever | RunnableLambda(format_docs),
-    "question": RunnablePassthrough
+    "question": RunnablePassthrough() 
 })
 
 parallel_chain.invoke("who is denis")
